@@ -500,8 +500,21 @@ function findCommonElements(arr1, arr2) {
  *    findLongestIncreasingSubsequence([3, 10, 2, 1, 20]) => 2
  *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => 3
  */
-function findLongestIncreasingSubsequence(/* nums */) {
-  throw new Error('Not implemented');
+function findLongestIncreasingSubsequence(nums) {
+  const a = nums.reduce((acc, el, i, arr) => {
+    let count = 1;
+    for (let j = i; j < nums.length; j += 1) {
+      if (arr[j + 1] > arr[j]) {
+        count += 1;
+      } else {
+        break;
+      }
+      acc[el] = count;
+    }
+
+    return acc;
+  }, {});
+  return Math.max(...Object.values(a));
 }
 
 /**
@@ -535,8 +548,14 @@ function propagateItemsByPositionIndex(arr) {
  *    shiftArray(['a', 'b', 'c', 'd'], -1) => ['b', 'c', 'd', 'a']
  *    shiftArray([10, 20, 30, 40, 50], -3) => [40, 50, 10, 20, 30]
  */
-function shiftArray(/* arr, n */) {
-  throw new Error('Not implemented');
+function shiftArray(arr, n) {
+  let arr1;
+  if (n > 0) {
+    arr1 = arr.splice(0, n + 1);
+  } else {
+    arr1 = arr.splice(0, Math.abs(n));
+  }
+  return arr.concat(arr1);
 }
 
 /**
@@ -552,8 +571,20 @@ function shiftArray(/* arr, n */) {
  *   sortDigitNamesByNumericOrder([ 'nine','eight','nine','eight' ]) => [ 'eight','eight','nine','nine']
  *   sortDigitNamesByNumericOrder([ 'one','one','one','zero' ]) => [ 'zero','one','one','one' ]
  */
-function sortDigitNamesByNumericOrder(/* arr */) {
-  throw new Error('Not implemented');
+function sortDigitNamesByNumericOrder(arr) {
+  const numbers = {
+    zero: 0,
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+  };
+  return arr.sort((a, b) => numbers[a] - numbers[b]);
 }
 
 /**
@@ -575,8 +606,17 @@ function sortDigitNamesByNumericOrder(/* arr */) {
  *   swapHeadAndTail([]) => []
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  if (arr.length === 0) return [];
+  let arr1;
+  if (arr.length % 2 === 0) {
+    arr1 = arr.splice(0, arr.length / 2);
+  } else {
+    arr1 = arr.splice(0, Math.floor(arr.length / 2));
+    const center = arr.shift(Math.floor(arr.length / 2));
+    arr.push(center);
+  }
+  return arr.concat(arr1);
 }
 
 module.exports = {
