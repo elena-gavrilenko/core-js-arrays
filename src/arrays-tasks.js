@@ -373,10 +373,10 @@ function generateOdds(len) {
  *   getElementByIndices(['one','two','three'], [2]) => 'three'  (arr[2])
  *   getElementByIndices([[[ 1, 2, 3]]], [ 0, 0, 1 ]) => 2        (arr[0][0][1])
  */
-function getElementByIndices(arr, indices) {
-  return indices.length === 1
-    ? arr[indices[0]]
-    : getElementByIndices(arr[indices[0]], indices.slice(indices.length - 1));
+function getElementByIndices(arr, [currentIndex, ...restIndexes]) {
+  return restIndexes.length === 0
+    ? arr[currentIndex]
+    : getElementByIndices(arr[currentIndex], restIndexes);
 }
 
 /**
@@ -505,20 +505,35 @@ function findCommonElements(arr1, arr2) {
  *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => 3
  */
 function findLongestIncreasingSubsequence(nums) {
-  const a = nums.reduce((acc, el, i, arr) => {
-    let count = 1;
-    for (let j = i; j < nums.length; j += 1) {
-      if (arr[j + 1] > arr[j]) {
-        count += 1;
-      } else {
-        break;
+  const longestLength = nums.reduce(
+    ({ longestSubLength, currentSubLength, currentSubLastEl }, el) => {
+      if (currentSubLastEl === undefined) {
+        return {
+          longestSubLength: 1,
+          currentSubLength: 1,
+          currentSubLastEl: el,
+        };
       }
-      acc[el] = count;
-    }
 
-    return acc;
-  }, {});
-  return Math.max(...Object.values(a));
+      return currentSubLastEl < el
+        ? {
+            longestSubLength,
+            currentSubLength: currentSubLength + 1,
+            currentSubLastEl: el,
+          }
+        : {
+            longestSubLength: Math.max(longestSubLength, currentSubLength),
+            currentSubLength: 1,
+            currentSubLastEl: el,
+          };
+    },
+    { longestSubLength: 0, currentSubLength: 0, currentSubLastEl: undefined }
+  );
+
+  return Math.max(
+    longestLength.longestSubLength,
+    longestLength.currentSubLength
+  );
 }
 
 /**
